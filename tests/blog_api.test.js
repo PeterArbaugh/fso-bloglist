@@ -96,6 +96,24 @@ test('add a new post', async () => {
     expect(response.body).toHaveLength(initialBlogs.length + 1)
 })
 
+test('set default likes to 0', async () => {
+    const newPost = [{
+        _id: '5a422bc61b54a676234d17fn',
+        title: 'New Test Post',
+        author: 'Robert G. Martin',
+        url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/NewTestPost.html',
+        __v: 0
+    }]
+
+    await api
+        .post('/api/blogs')
+        .send(newPost)
+        .expect(201)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body[response.body.length - 1].likes).toBe(0)
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })

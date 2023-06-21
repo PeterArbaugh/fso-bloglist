@@ -6,6 +6,5 @@ Content-Type: application/json
 
 {
     "title": "test blog 2",
-    "author": "test author 2",
     "url": "https://google.com"
 }

@@ -114,6 +114,42 @@ test('set default likes to 0', async () => {
     expect(response.body[response.body.length - 1].likes).toBe(0)
 })
 
+test('missing title', async () => {
+    const badPost = [
+        {
+            'author': 'test blog 2',
+            'url': 'https://google.com'
+        }
+    ]
+
+    await api
+        .post('/api/blogs')
+        .send(badPost)
+        .expect(400)
+    
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(initialBlogs.length)
+    
+})
+
+test('missing url', async () => {
+    const badPost = [
+        {
+            'author': 'test blog 2',
+            'title': 'bad post with no url'
+        }
+    ]
+
+    await api
+        .post('/api/blogs')
+        .send(badPost)
+        .expect(400)
+    
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(initialBlogs.length)
+    
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })

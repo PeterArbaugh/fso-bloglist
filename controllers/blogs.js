@@ -17,6 +17,11 @@ blogRouter.post('/', (request, response) => {
         .then(result => {
             response.status(201).json(result)
         })
+        .catch(err => {
+            if (err.name === 'ValidationError') {
+                return response.status(400).send({error: err.message})
+            }
+        })
 })
 
 module.exports = blogRouter

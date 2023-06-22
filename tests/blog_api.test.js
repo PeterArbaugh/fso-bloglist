@@ -50,6 +50,11 @@ const initialBlogs = [
     }  
 ]
 
+const blogsInDb = async () => {
+    const blogs = await Blog.find({})
+    return blogs.map(blog => blog.toJSON())
+}
+
 beforeEach(async () => {
     await Blog.deleteMany({})
 
@@ -140,8 +145,19 @@ describe('saving a new blog with correct fields', () => {
     })
 })
 
+describe('delete blogs', () => {
+    test('delete a blog and receive 204', async () => {
+        const currentBlogs = await blogsInDb()
+        const idToDelete = currentBlogs[0].id
 
+        await api
+            .delete(`/api/blogs/${idToDelete}`)
+            .expect(204)
 
+        const updateBlogs = await blogsInDb()
+        expect(updateBlogs).toHaveLength(initialBlogs.length - 1)
+    })
+})
 
 afterAll(async () => {
     await mongoose.connection.close()

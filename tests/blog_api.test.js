@@ -159,6 +159,47 @@ describe('delete blogs', () => {
     })
 })
 
+test('update a single blog', async () => {
+        
+    const updatePost = {
+        title: 'This post is updated',
+        author: 'Updater Update',
+        url: 'http://blog.cleancoder.com/uncle-bob/updated-post.html'
+    }
+
+    console.log(updatePost)
+
+    const currentBlogs = await blogsInDb()
+    const idToUpdate = currentBlogs[0].id
+
+    console.log(idToUpdate)
+
+    try {
+        await api
+            .put(`/api/blogs/${idToUpdate}`)
+            .send(updatePost)
+            .expect(200)
+            .catch(error => console.log(error))
+
+        console.log('api complete', idToUpdate)
+
+        const updateBlogs = await blogsInDb()
+        const updateBlog = updateBlogs.find(blog => blog.id === idToUpdate)
+
+        console.log('blogs in db', updateBlogs)
+        expect(updateBlog.title).toBe(updatePost.title)
+        expect(updateBlog.author).toBe(updatePost.author)
+        expect(updateBlog.url).toBe(updatePost.url)
+    } catch (error) {
+        console.error('Error during API call', error)
+        throw error
+    }
+})
+
+// describe('update blogs', () => {
+    
+// })
+
 afterAll(async () => {
     await mongoose.connection.close()
 })

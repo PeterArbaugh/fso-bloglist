@@ -43,6 +43,78 @@ describe('when there is initially one user in db', () => {
         expect(usernames).toContain(newUser.username)
     })
 
+    test('invalid username rejected', async () => {
+        const usersAtStart = await usersInDb()
+
+        const badUser = {
+            username: 'x',
+            name: 'Root test',
+            password: 'test-password'
+        }
+
+        await api
+            .post('/api/users')
+            .send(badUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+
+    test('invalid pw rejected', async () => {
+        const usersAtStart = await usersInDb()
+
+        const badUser = {
+            username: 'root-user',
+            name: 'Root test',
+            password: 'd'
+        }
+
+        await api
+            .post('/api/users')
+            .send(badUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+
+    test('no duplicate usernames', async () => {
+        const usersAtStart = await usersInDb()
+
+        const newUser = {
+            username: 'pfa-test',
+            name: 'Root test',
+            password: 'test-password'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const dupeUser = {
+            username: 'pfa-test',
+            name: 'Root test',
+            password: 'test-password'
+        }
+
+        await api
+            .post('/api/users')
+            .send(dupeUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+        const usernames = usersAtEnd.map(u => u.username)
+        expect(usernames).toContain(newUser.username)
+    })
+
     afterAll(async () => {
         await mongoose.connection.close()
     })

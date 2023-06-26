@@ -5,8 +5,8 @@ POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "New Test Post",
-    "author": "Robert G. Martin",
+    "title": "New Test Post with Author",
+    "author": ["649a136dce72379d44077570"],
     "url": "http://blog.cleancoder.com/uncle-bob/2016/05/01/NewTestPost.html"
 }
 
@@ -18,7 +18,7 @@ POST http://localhost:3003/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "px",
+    "username": "pxasdf",
     "name": "Root test",
     "password": "teststs"
 }

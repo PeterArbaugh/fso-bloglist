@@ -15,45 +15,51 @@ const headers = {
 const initialBlogs = [
     {
         title: 'React patterns',
-        author: '649a2020f0c7f5299853f508',
+        user: '649a2020f0c7f5299853f508',
         url: 'https://reactpatterns.com/',
         likes: 7,
-        __v: 0
+        __v: 0,
+        author: 'Author 1'
     },
     {
         title: 'Go To Statement Considered Harmful',
-        author: '649a2020f0c7f5299853f508',
+        user: '649a2020f0c7f5299853f508',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
         likes: 5,
-        __v: 0
+        __v: 0,
+        author: 'Author 2'
     },
     {
         title: 'Canonical string reduction',
-        author: '649a2020f0c7f5299853f508',
+        user: '649a2020f0c7f5299853f508',
         url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
         likes: 12,
-        __v: 0
+        __v: 0,
+        author: 'Author 3'
     },
     {
         title: 'First class tests',
-        author: '649a2020f0c7f5299853f508',
+        user: '649a2020f0c7f5299853f508',
         url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
         likes: 10,
-        __v: 0
+        __v: 0,
+        author: 'Author 4'
     },
     {
         title: 'TDD harms architecture',
-        author: '649a2020f0c7f5299853f508',
+        user: '649a2020f0c7f5299853f508',
         url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
         likes: 0,
-        __v: 0
+        __v: 0,
+        author: 'Author 5'
     },
     {
         title: 'Type wars',
-        author: '649a2020f0c7f5299853f508',
+        user: '649a2020f0c7f5299853f508',
         url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
         likes: 2,
-        __v: 0
+        __v: 0,
+        author: 'Author 6'
     }  
 ]
 
@@ -112,7 +118,7 @@ describe('saving a new blog with correct fields', () => {
     test('set default likes to 0', async () => {
         const newPost = {
             title: 'New Test Post',
-            author: '649a2020f0c7f5299853f508',
+            user: '649a2020f0c7f5299853f508',
             url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/NewTestPost.html'
         }
     
@@ -130,7 +136,7 @@ describe('saving a new blog with correct fields', () => {
     
     test('missing title', async () => {
         const badPost ={
-            'author': '649a2020f0c7f5299853f508',
+            'user': '649a2020f0c7f5299853f508',
             'url': 'https://google.com'
         }
     
@@ -149,7 +155,7 @@ describe('saving a new blog with correct fields', () => {
     
     test('missing url', async () => {
         const badPost = {
-            'author': '649a2020f0c7f5299853f508',
+            'user': '649a2020f0c7f5299853f508',
             'title': 'bad post with no url'
         }
     
@@ -186,7 +192,7 @@ test('update a single blog', async () => {
         
     const updatePost = {
         title: 'This post is updated',
-        author: '649a2020f0c7f5299853f508',
+        user: '649a2020f0c7f5299853f508',
         url: 'http://blog.cleancoder.com/uncle-bob/updated-post.html'
     }
 
@@ -213,7 +219,7 @@ test('update a single blog', async () => {
 
         console.log('blogs in db', updateBlogs)
         expect(updateBlog.title).toBe(updatePost.title)
-        expect(String(updateBlog.author)).toBe(updatePost.author)
+        expect(String(updateBlog.user)).toBe(updatePost.user)
         expect(updateBlog.url).toBe(updatePost.url)
     } catch (error) {
         console.error('Error during API call', error)

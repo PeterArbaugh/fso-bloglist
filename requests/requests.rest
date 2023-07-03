@@ -1,4 +1,6 @@
 GET http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyMSIsImlkIjoiNjQ5YTIwMjBmMGM3ZjUyOTk4NTNmNTA4IiwiaWF0IjoxNjg3ODIyMzc2fQ.nd2K3dV6oTixgMcx6AQS3m-MclPGDY9ApoD8nGp5Wkg
 
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
@@ -6,9 +8,10 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyMSIsImlkIjoiNjQ5YTIwMjBmMGM3ZjUyOTk4NTNmNTA4IiwiaWF0IjoxNjg3ODIyMzc2fQ.nd2K3dV6oTixgMcx6AQS3m-MclPGDY9ApoD8nGp5Wkg
 
 {
-    "title": "New Test Post with Author",
-    "url": "http://blog.cleancoder.com/uncle-bob/2016/05/01/NewTestPost.html"
-}
+            "title": "New Test Post",
+            "url": "http://blog.cleancoder.com/uncle-bob/2016/05/01/NewTestPost.html",
+            "likes": 0
+        }
 
 ###
 DELETE http://localhost:3003/api/blogs/649e0b72e7db51cb0eb13ef0 HTTP/1.1

@@ -1,11 +1,10 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 
 
 blogRouter.get('/', async (request, response) => {
+    console.log('get headers', request.headers)
     const blogs = await Blog
         .find({})
         .populate('author')
@@ -15,14 +14,8 @@ blogRouter.get('/', async (request, response) => {
 blogRouter.post('/', async (request, response) => {
     try {
         const body = request.body
-        console.log('body', body)
+        console.log('post headers', request.headers)
 
-        // const decodedToken = jwt.verify(request.token, process.env.SECRET)
-        // if (!decodedToken.id) {
-        //     throw new Error('token invalid')
-        // }
-
-        // const user = await User.findById(decodedToken.id)
         const user = request.user
         console.log('user', user)
     
@@ -34,10 +27,11 @@ blogRouter.post('/', async (request, response) => {
         })
 
         const savedBlog = await blog.save()
+        console.log('blog saved')
         user.blogs = user.blogs.concat(savedBlog.id)
         await user.save()
 
-        response.json(savedBlog)
+        response.status(201).json(savedBlog)
 
     } catch (error) {
         if (error.name === 'ValidationError') {
@@ -52,15 +46,7 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-    //await Blog.findByIdAndRemove(request.params.id)
     const blog = await Blog.findById(request.params.id)
-    
-    // const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    // if (!decodedToken.id) {
-    //     throw new Error('token invalid')
-    // }
-
-    // const user = await User.findById(decodedToken.id)
     const user = request.user
     
     if (blog.author.toString() === user.id.toString()) {

@@ -4,14 +4,16 @@ const middleware = require('../utils/middleware')
 
 
 blogRouter.get('/', async (request, response) => {
-    console.log('get headers', request.headers)
+    console.log('get request via blogRouter')
     const blogs = await Blog
         .find({})
         .populate('user')
     response.json(blogs)
 })
     
-blogRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
+blogRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async (request, response, next) => {
+    console.log('post request via blogRouter')
+    
     try {
         const body = request.body
         console.log('post headers', request.headers)
@@ -35,14 +37,16 @@ blogRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async 
         response.status(201).json(savedBlog)
 
     } catch (error) {
-        if (error.name === 'ValidationError') {
-            return response.status(400).send({error: error.message})
-        } else if (error.name ===  'JsonWebTokenError') {
+        // if (error.name === 'ValidationError') {
+        //     return response.status(400).send({error: error.message})
+        // } else if (error.name ===  'JsonWebTokenError') {
 
-            return response.status(400).json({ error: error.message })
-        } else if (error.message === 'token invalid') {
-            return response.status(401).json({ error: error.message})
-        }
+        //     return response.status(400).json({ error: error.message })
+        // } else if (error.message === 'token invalid') {
+        //     return response.status(401).json({ error: error.message})
+        // }
+        console.log('error at blogRouter catch block')
+        next(error)
     }
 })
 

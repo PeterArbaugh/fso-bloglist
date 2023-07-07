@@ -2,13 +2,21 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 const tokenExtractor = (request, response, next) => {
-    const authorization = request.get('Authorization')
-    console.log('authorization', authorization)
-    if (authorization && authorization.startsWith('bearer ')) {
-        request.token = authorization.replace('bearer ', '')
+    try {
+        const authorization = request.get('Authorization')
+        console.log('authorization', authorization)
+        if (authorization && authorization.startsWith('bearer ')) {
+            request.token = authorization.replace('bearer ', '')
+        } else {
+            console.error('no auth header or invalid format')
+            return next(new Error('Invalid token'))
+        }
+        console.log('extracted token', request.token)
+        next()
+    } catch (error) {
+        console.error('Error in tokenExtractor', error)
+        next(error)
     }
-    console.log('extracted token', request.token)
-    next()
 }
 
 const userExtractor = async (request, response, next) => {
@@ -26,4 +34,23 @@ const userExtractor = async (request, response, next) => {
     }    
 }
 
-module.exports = { tokenExtractor, userExtractor }
+// eslint-disable-next-line no-unused-vars
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+    if (error.name === 'ValidationError') {
+        return response.status(400).send({error: error.message})
+    } else if (error.name ===  'JsonWebTokenError') {
+
+        return response.status(400).json({ error: error.message })
+    } else if (error.message === 'token invalid') {
+        return response.status(401).json({ error: error.message})
+    } else {
+        return response.status(500).send({ error: error.message })
+    }
+}
+
+module.exports = { tokenExtractor, userExtractor, errorHandler }

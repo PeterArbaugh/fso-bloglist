@@ -3,10 +3,12 @@ const jwt = require('jsonwebtoken')
 
 const tokenExtractor = (request, response, next) => {
     try {
+        // console.log('request', request.headers)
+        // console.log('body', request.body)
         const authorization = request.get('Authorization')
         console.log('authorization', authorization)
-        if (authorization && authorization.startsWith('bearer ')) {
-            request.token = authorization.replace('bearer ', '')
+        if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+            request.token = authorization.substring(7)
         } else {
             console.error('no auth header or invalid format')
             return next(new Error('Invalid token'))
@@ -22,7 +24,7 @@ const tokenExtractor = (request, response, next) => {
 const userExtractor = async (request, response, next) => {
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!decodedToken.id) {
-        throw new Error('token invalid')
+        return next(new Error('token invalid')) 
     }
 
     try {

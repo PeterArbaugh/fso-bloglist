@@ -36,3 +36,15 @@ Content-Type: application/json
     "username": "testuser1",
     "password": "testytest"
 }
+
+###
+PUT http://localhost:3003/api/blogs/64ad8369dc48349477742a65
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyMSIsImlkIjoiNjQ5YTIwMjBmMGM3ZjUyOTk4NTNmNTA4IiwiaWF0IjoxNjg3ODIyMzc2fQ.nd2K3dV6oTixgMcx6AQS3m-MclPGDY9ApoD8nGp5Wkg
+
+{
+  "title": "test with dependencies",
+  "author": "asdfasdf",
+  "url": "asdfasdf",
+  "likes": 3
+}

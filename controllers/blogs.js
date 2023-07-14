@@ -3,12 +3,18 @@ const Blog = require('../models/blog')
 const middleware = require('../utils/middleware')
 
 
-blogRouter.get('/', async (request, response) => {
-    console.log('get request via blogRouter')
-    const blogs = await Blog
-        .find({})
-        .populate('user')
-    response.json(blogs)
+blogRouter.get('/', async (request, response, next) => {
+    try {
+        const blogs = await Blog
+            .find({})
+            .populate('user')
+        response.json(blogs)
+    } catch (error) {
+        console.log('error at blogRouter get request')
+        next(error)
+    }
+    
+
 })
     
 blogRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async (request, response, next) => {
@@ -56,17 +62,18 @@ blogRouter.delete('/:id', middleware.tokenExtractor, middleware.userExtractor, a
     
     if (blog.user.toString() === user.id.toString()) {
         await Blog.findByIdAndRemove(request.params.id)
+        console.log('deleted', request.params.id) 
         response.status(204).end()
     }
     
 })
 
-blogRouter.put('/:id', async (request, response) => {
+blogRouter.put('/:id', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
     try {
         console.log('run update', request.params.id, request.body)
         const blog = await Blog.findByIdAndUpdate(request.params.id, request.body, {
             new: true,
-            runValidators: true
+            runValidators: false
         })
         if(!blog){
             return response.status(404).json({ error: 'Post not found' })

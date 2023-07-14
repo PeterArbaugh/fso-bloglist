@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const tokenExtractor = (request, response, next) => {
     try {
         // console.log('request', request.headers)
-        // console.log('body', request.body)
+        console.log('body', request.body)
         const authorization = request.get('Authorization')
         console.log('authorization', authorization)
         if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -38,15 +38,16 @@ const userExtractor = async (request, response, next) => {
 
 // eslint-disable-next-line no-unused-vars
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
+    console.error('error handler', error.message, request.headers)
   
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
     }
     if (error.name === 'ValidationError') {
+        console.error('Validation error')
         return response.status(400).send({error: error.message})
     } else if (error.name ===  'JsonWebTokenError') {
-
+        console.error('JWT error')
         return response.status(400).json({ error: error.message })
     } else if (error.message === 'token invalid') {
         return response.status(401).json({ error: error.message})
